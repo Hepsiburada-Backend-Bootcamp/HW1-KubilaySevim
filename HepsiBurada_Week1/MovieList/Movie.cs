@@ -14,6 +14,7 @@ namespace MovieList
         [MinLength(2)]
         public string Director { get; set; }
 
+        //Between years : 1900-2099
         [RegularExpression("^(19|20)[0-9]{2}")]
         public int ReleaseDate { get; set; }
         

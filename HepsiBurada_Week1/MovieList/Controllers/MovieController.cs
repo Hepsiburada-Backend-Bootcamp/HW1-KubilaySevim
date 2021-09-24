@@ -10,6 +10,7 @@ namespace MovieList.Controllers
     [ApiController]
     public class MovieController : ControllerBase
     {
+        
         private static List<Movie> _movieList = new List<Movie>()
         {
             new Movie
@@ -42,12 +43,14 @@ namespace MovieList.Controllers
             },
         };
 
+        //Get All
         [HttpGet]
         public async Task<IActionResult> GetMovies()
         {
             return await Task.FromResult(Ok(_movieList));
         }
 
+        //api/get/idFromQuery?id=
         [HttpGet("get/idFromQuery/")]
         public IActionResult Get([FromQuery] int id)
         {
@@ -59,7 +62,13 @@ namespace MovieList.Controllers
 
             return NotFound(id);
         }
-
+        
+        /**
+            Get movies with 2 parameter first sortField is properties in Movie.cs(Id,title,director,releasedate,
+            selectAscOrDesc :  write asc or desc  for sorting the fields 
+            sample : sortField : title, selectAscOrDesc : asc 
+            api/Movie/movies?sortField=title&selectAscOrDesc=asc
+        */
         [HttpGet("movies/")]
         public IActionResult GetSortByFieldAsc([FromQuery] string sortField, string selectAscOrDesc)
         {
@@ -81,6 +90,9 @@ namespace MovieList.Controllers
         }
 
 
+        //add fromBody
+        //id increment type : find max id and + 1 set to movieDto
+        //add to movielist
         [HttpPost]
         public IActionResult Add([FromBody] Movie movieDto)
         {
@@ -94,6 +106,7 @@ namespace MovieList.Controllers
             return Created($"api/movies/{movieDto.Title}", movieDto);
         }
         
+        //finds the submitted id and update fields with movieDto
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] Movie movieDto)
         {
@@ -109,6 +122,7 @@ namespace MovieList.Controllers
             return BadRequest();
         }
         
+        // Changed field will change with patch
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, [FromBody] Movie movieDto)
         {
@@ -138,6 +152,8 @@ namespace MovieList.Controllers
             return NotFound();
         }
         
+        // sortField is : property 
+        //OrderBy : asc
         private void SortByFieldAsc(string sortField, ref List<Movie> movieList)
         {
             switch (sortField.ToLower())
@@ -160,6 +176,8 @@ namespace MovieList.Controllers
             }
         }
 
+        // sortField is : property, 
+        //OrderByDescending 
         private void SortByFieldDesc(string sortField, ref List<Movie> movieList)
         {
             switch (sortField.ToLower())
